@@ -1,33 +1,42 @@
 class PaymentsController < ApplicationController
+  before_action :authenticate_user!
+  skip_before_action :verify_authenticity_token
+
+
+  require "razorpay"
+
+
   # Create a payment and redirect user to payment link
   def create_payment
-    amount = params[:amount]# Amount in paise (for example, 1000 paise = ₹10)
+    Razorpay.setup('rzp_test_tXaPmTEL1CJXM5', 'rp6rIQnDQTszivhDbZvttHnF')
+    amount = params[:amount]
     currency = 'INR'
     description = 'Sample Payment Description'
+    order = Razorpay::Order.create(amount: amount, currency: 'INR')
 
-    payment = Razorpay::Payment.create(amount: amount, currency: currency, description: description)
-
-    redirect_to payment.notes['short_url'] # Redirect user to the payment link
+    render json: order
   end
 
   # Handle Razorpay webhook for payment confirmation
   def webhook
+    Razorpay.setup('rzp_test_tXaPmTEL1CJXM5', 'rp6rIQnDQTszivhDbZvttHnF')
     payload = request.body.read
     signature = request.headers['X-Razorpay-Signature']
 
     # Verify the signature using Razorpay's utility method
-    if Razorpay::Utility.verify_webhook_signature(payload, signature, 'YOUR_WEBHOOK_SECRET')
+    if Razorpay::Utility.verify_webhook_signature(payload, signature, 'omkar_ponde_webhook_key')
+
       event = JSON.parse(payload)
       payment_id = event['payload']['payment']['entity']['id']
       payment = Razorpay::Payment.fetch(payment_id)
 
       if payment.status == 'captured'
-        render json: {message: "Payment Successful"}
+        render json: { message: 'Payment Successful' }
       else
-        ender json: {message: "Payment status pending"}
+        render json: { message: 'Payment status pending' }
       end
     else
-      ender json: {message: "Payment Unsuccessful"}
+      render json: { message: 'Payment Unsuccessful' }
     end
 
     head :ok
