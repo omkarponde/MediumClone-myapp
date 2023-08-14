@@ -42,3 +42,4 @@ class PaymentsController < ApplicationController
     head :ok
   end
 end
+

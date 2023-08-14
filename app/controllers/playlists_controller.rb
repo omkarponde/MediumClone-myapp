@@ -1,6 +1,6 @@
 class PlaylistsController < ApplicationController
   before_action :authenticate_user! # Assuming you're using Devise or a similar authentication gem
-
+  skip_before_action :verify_authenticity_token
   def new
     @playlist = current_user.playlists.build
   end
@@ -8,28 +8,32 @@ class PlaylistsController < ApplicationController
   def create
     @playlist = current_user.playlists.build(playlist_params)
     if @playlist.save
-      redirect_to @playlist, notice: 'Playlist created successfully!'
+      render json: current_user.playlists
     else
-      render :new
+      render json: {"message": "Playlist not created"}
     end
   end
 
   def show
-    @playlist = current_user.playlists.find(params[:id])
+    @playlist = current_user.playlists.find(params[:playlist_id])
+    @posts_in_playlist = @playlist.posts
+    render json: @posts_in_playlist
   end
 
   def add_post
     @playlist = current_user.playlists.find(params[:playlist_id])
     @post = Post.find(params[:post_id])
     @playlist.posts << @post
-    redirect_to @playlist, notice: 'Post added to playlist!'
+    @posts_in_playlist = @playlist.posts
+    render json: @posts_in_playlist, notice: 'Post added to playlist!'
   end
 
   def remove_post
     @playlist = current_user.playlists.find(params[:playlist_id])
     @post = Post.find(params[:post_id])
     @playlist.posts.delete(@post)
-    redirect_to @playlist, notice: 'Post removed from playlist!'
+    @posts_in_playlist = @playlist.posts
+    render json: @posts_in_playlist, notice: 'Removed to playlist!'
   end
 
   def share
