@@ -1,5 +1,5 @@
 class PlaylistsController < ApplicationController
-  before_action :authenticate_user! # Assuming you're using Devise or a similar authentication gem
+  before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
   def new
     @playlist = current_user.playlists.build
