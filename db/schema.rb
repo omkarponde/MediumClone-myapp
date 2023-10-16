@@ -39,91 +39,33 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_13_061556) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "followers", force: :cascade do |t|
-    t.integer "follower_id"
-    t.integer "following_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "follower_id_id"
-    t.integer "following_id_id"
-    t.index ["follower_id_id"], name: "index_followers_on_follower_id_id"
-    t.index ["following_id_id"], name: "index_followers_on_following_id_id"
-  end
+# Could not dump table "followers" because of following StandardError
+#   Unknown type '' for column 'id'
 
-  create_table "playlists", force: :cascade do |t|
-    t.string "name"
-    t.integer "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_playlists_on_user_id"
-  end
+# Could not dump table "playlists" because of following StandardError
+#   Unknown type 'uuid' for column 'id'
 
   create_table "playlists_posts", id: false, force: :cascade do |t|
     t.integer "playlist_id", null: false
     t.integer "post_id", null: false
+    t.index ["playlist_id", "post_id"], name: "index_playlists_posts_on_playlist_id_and_post_id"
+    t.index ["post_id", "playlist_id"], name: "index_playlists_posts_on_post_id_and_playlist_id"
   end
 
-  create_table "post_revisions", force: :cascade do |t|
-    t.integer "post_id"
-    t.string "title"
-    t.string "topic"
-    t.text "description"
-    t.integer "likes"
-    t.integer "comments"
-    t.integer "views"
-    t.integer "user_id"
-    t.string "status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
+# Could not dump table "post_revisions" because of following StandardError
+#   Unknown type 'uuid' for column 'id'
 
-  create_table "posts", force: :cascade do |t|
-    t.string "title"
-    t.string "topic"
-    t.text "description"
-    t.integer "likes"
-    t.integer "comments"
-    t.integer "views"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
-    t.string "status", default: "published"
-    t.index ["user_id"], name: "index_posts_on_user_id"
-  end
+# Could not dump table "posts" because of following StandardError
+#   Unknown type '' for column 'id'
 
-  create_table "profiles", force: :cascade do |t|
-    t.string "firstname"
-    t.string "lastname"
-    t.text "bio"
-    t.integer "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "interested_topics"
-    t.index ["user_id"], name: "index_profiles_on_user_id"
-  end
+# Could not dump table "profiles" because of following StandardError
+#   Unknown type 'uuid' for column 'id'
 
-  create_table "saved_posts", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "post_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["post_id"], name: "index_saved_posts_on_post_id"
-    t.index ["user_id"], name: "index_saved_posts_on_user_id"
-  end
+# Could not dump table "saved_posts" because of following StandardError
+#   Unknown type 'uuid' for column 'id'
 
-  create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "jti"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["jti"], name: "index_users_on_jti"
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  end
+# Could not dump table "users" because of following StandardError
+#   Unknown type 'uuid' for column 'id'
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
