@@ -1,6 +1,6 @@
 class CreateProfiles < ActiveRecord::Migration[7.0]
   def change
-    create_table :profiles do |t|
+    create_table :profiles, id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
       t.string :firstname
       t.string :lastname
       t.text :bio

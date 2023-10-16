@@ -1,6 +1,6 @@
 class CreatePostRevisions < ActiveRecord::Migration[7.0]
   def change
-    create_table :post_revisions do |t|
+    create_table :post_revisions, id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
       t.integer :post_id
       t.string :title
       t.string :topic

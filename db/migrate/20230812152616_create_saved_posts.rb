@@ -1,6 +1,6 @@
 class CreateSavedPosts < ActiveRecord::Migration[7.0]
   def change
-    create_table :saved_posts do |t|
+    create_table :saved_posts, id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
       t.references :user, null: false, foreign_key: true
       t.references :post, null: false, foreign_key: true
 
